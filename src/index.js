@@ -1,8 +1,14 @@
-const express = require('express');
-const app = express();
+const cluster = require('cluster');
 
-app.get('/', (req, res) => {
-    res.send('Hi There');
-});
+if (cluster.isMaster) {
+    cluster.fork();
+} else {
+    const express = require('express');
+    const app = express();
 
-app.listen(3000);
+    app.get('/', (req, res) => {
+        res.send('Hi There');
+    });
+
+    app.listen(3000);
+}
